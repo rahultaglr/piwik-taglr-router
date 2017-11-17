@@ -39,7 +39,7 @@ var PiwikTracker = function(opts) {
 		return apiShim;
 	}
 	
-	const filler = (opts.hostname.lastIndexOf('/') === opts.hostname.length - 1) ? '/' : '';
+	const filler = (opts.hostname.lastIndexOf('/') === opts.hostname.length - 1) ? '' : '/';
 	opts.clientTrackerName = opts.hostname + filler+ 'client/piwik.js';
 	window._paq = window['_paq'] || [];
 
