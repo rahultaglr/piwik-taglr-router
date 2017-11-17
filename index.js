@@ -28,7 +28,6 @@ var PiwikTracker = function(opts) {
 	opts.updateDocumentTitle = ((opts.updateDocumentTitle !== undefined) ? opts.updateDocumentTitle : true);
 	opts.ignoreInitialVisit = ((opts.ignoreInitialVisit !== undefined) ? opts.ignoreInitialVisit : false);
 	opts.injectScript = ((opts.injectScript !== undefined) ? opts.injectScript : true);
-	opts.clientTrackerName = ((opts.clientTrackerName !== undefined) ? opts.clientTrackerName : 'piwik.js');
 	opts.serverTrackerName = ((opts.serverTrackerName !== undefined) ? opts.serverTrackerName : 'piwik.php');
 
   if (!opts.url || !opts.siteId) {
@@ -39,7 +38,9 @@ var PiwikTracker = function(opts) {
 
 		return apiShim;
 	}
-
+	
+	const filler = (opts.hostname.lastIndexOf('/') === opts.hostname.length - 1) ? '/' : '';
+	opts.clientTrackerName = opts.hostname + filler+ 'client/piwik.js';
 	window._paq = window['_paq'] || [];
 
 	/**
@@ -167,8 +168,11 @@ var PiwikTracker = function(opts) {
 		}
 
 		if (opts.injectScript) {
-			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+opts.clientTrackerName;
-			s.parentNode.insertBefore(g,s);
+			var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true;
+				g.async=true; g.src=opts.clientTrackerName;
+				setTimeout(function () {
+					s.parentNode.insertBefore(g,s);	
+				}, 15000);
 		}
 	})();
 
